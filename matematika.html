@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matematika - Ular Tangga Sehat</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { position: relative; min-height: 100vh; margin: 0; display: grid; place-items: center; background: #101610; color: #3aff78; font-family: Helvetica, Arial, sans-serif; }
+    body::before { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,255,255,.060) 1px, transparent 1px), linear-gradient(90deg,rgba(255,255,255,.060) 1px,transparent 1px); background-size:48px 48px; content:""; pointer-events:none; mask-image:radial-gradient(ellipse at center,#000 20%,transparent 80%); }
+    main { position: relative; z-index: 1; width: min(100% - 2rem, 700px); padding: 3rem 2rem; text-align:left; }
+    h1 { margin:0 0 .5rem; font-size:clamp(2.2rem,7vw,4rem); letter-spacing:-.05em; }
+    .subtitle { color:#b8b8b8; margin:.5rem 0 1.5rem; }
+    .challenge { min-height:170px; display:grid; place-items:center; margin:0 auto 1.25rem; padding:2rem; border:1px solid #4d5a4f; border-radius:20px; background:rgba(30,36,30,.96); color:#f5f5f5; font-size:clamp(1.85rem,4vw,1.55rem); line-height:1.45; box-shadow:0 12px 40px rgba(0,0,0,.18); }
+    .buttons { display:flex; flex-wrap:wrap; justify-content:center; gap:.75rem; }
+    button { padding:.8rem 1.25rem; border:1px solid #555; border-radius:999px; background:#1e241e; color:#f5f5f5; font:inherit; cursor:pointer; transition:.16s ease; }
+    button:hover { transform:translateY(-2px); border-color:#888; background:#5b7d71; }
+    button:focus-visible { outline:2px solid #f5f5f5; outline-offset:3px; }
+    .back { margin-top:.75rem; background:transparent; }
+    .count { color:#9aa59b; font-size:.9rem; margin:.7rem 0 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Matematika</h1>
+    <p class="subtitle">Ambil tantangan matematika acak</p>
+    <div class="challenge" id="challenge" aria-live="polite">Siap untuk tantangan?</div>
+    <div class="buttons">
+      <button type="button" id="roll">Acak Tantangan</button>
+      <button type="button" class="back" onclick="window.location.href='index.html'">Kembali ke Menu</button>
+    </div>
+    <p class="count" id="count"></p>
+  </main>
+  <script>
+    const key = "matematikaRemaining";
+    const challenges = [
+  
+    "x^2 - 5x + 6 = 0", // 2, 3
+    "x^2 + 4x - 12 = 0", // 2, -6
+    "2x^2 - 8 = 0", // 2, -2
+    "x^2 - 10x + 25 = 0", // 5
+    "3x^2 - 12x = 0", // 0, 4
+    "x^2 + x - 20 = 0", // 4, -5
+    "2x^2 - 7x + 3 = 0", // 1/2, 3
+
+  // Logarithms
+    "\\log_2 32", // 5
+    "\\log_3 81", // 4
+    "\\log_{10} 0.001", // -3
+    "\\log_2 8 + \\log_2 4", // 5
+    "\\ln e^7", // 7
+    "\\log_5 100 - \\log_5 4", // 2
+    "\\log_2 (x + 1) = 3", // 7
+
+  // Limits
+    "\\lim_{x \\to 2} (x^2 + 3x)", // 10
+    "\\lim_{x \\to 3} \\frac{x^2 - 9}{x - 3}", // 6
+    "\\lim_{x \\to 0} \\frac{\\sin x}{x}", // 1
+    "\\lim_{x \\to \\infty} \\frac{3x^2 + 1}{x^2 - 5}", // 3
+    "\\lim_{x \\to 0} \\frac{e^x - 1}{x}", // 1
+    "\\lim_{x \\to 1} \\frac{x^2 - 1}{x^2 + x - 2}", // 2/3
+    "\\lim_{x \\to 0} \\frac{\\sin 3x}{x}", // 3
+
+  // Trigonometry
+    "\\sin 30^\\circ + \\cos 60^\\circ", // 1
+    "\\tan 45^\\circ + \\sin 90^\\circ", // 2
+    "\\sin^2 \\frac{\\pi}{8} + \\cos^2 \\frac{\\pi}{8}", // 1
+    "\\sin 15^\\circ \\cos 15^\\circ", // 1/4
+    "\\cos 120^\\circ", // -1/2
+    "\\tan 60^\\circ \\cdot \\cos 30^\\circ", // 3/2
+    "\\sin x = \\frac{\\sqrt{3}}{2}, \\; 0 < x < \\frac{\\pi}{2}", // pi/3
+
+  // Derivatives
+    "\\frac{d}{dx}\\left(x^3 + 2x\\right)", // 3x^2 + 2
+    "\\frac{d}{dx}\\left(5x^4\\right)", // 20x^3
+    "\\frac{d}{dx}\\left(\\sin x + \\cos x\\right)", // cos x - sin x
+    "\\frac{d}{dx}\\left(e^{2x}\\right)", // 2e^{2x}
+    "\\frac{d}{dx}\\left(x \\ln x - x\\right)", // ln x
+    "\\frac{d}{dx}\\left(x^2 + 3x\\right)\\Big|_{x=2}", // 7
+
+  // Integrals
+    "\\int_{-1}^{1} x^3 \\, dx", // 0
+    "\\int_0^2 3x^2 \\, dx", // 8
+    "\\int_0^{\\pi} \\sin x \\, dx", // 2
+    "\\int_1^e \\frac{1}{x} \\, dx", // 1
+    "\\int_0^1 (2x + 1) \\, dx", // 2
+    "\\int_0^{\\ln 2} e^x \\, dx", // 1
+  ];
+
+    let remaining = JSON.parse(sessionStorage.getItem(key)) || challenges.map((_, i) => i);
+    const challenge = document.querySelector("#challenge");
+    const roll = document.querySelector("#roll");
+    const count = document.querySelector("#count");
+    function renderChallenge(text, isLatex = false) {
+      challenge.replaceChildren();
+      if (isLatex && window.katex) {
+        katex.render(text, challenge, {
+          throwOnError: false,
+          displayMode: false
+        });
+      } else {
+        challenge.textContent = text;
+      }
+    }
+    function updateCount() {
+      count.textContent = `${remaining.length} tantangan tersisa`;
+      roll.textContent = remaining.length ? "Acak Tantangan" : "Mulai Lagi";
+    }
+    updateCount();
+    roll.addEventListener("click", () => {
+      if (!remaining.length) {
+        remaining = challenges.map((_, i) => i);
+        sessionStorage.setItem(key, JSON.stringify(remaining));
+        renderChallenge("Semua tantangan sudah dimainkan. Satu putaran baru telah dimulai!");
+        updateCount();
+        return;
+      }
+      const position = Math.floor(Math.random() * remaining.length);
+      const index = remaining.splice(position, 1)[0];
+      sessionStorage.setItem(key, JSON.stringify(remaining));
+      renderChallenge(challenges[index], true);
+      updateCount();
+      if (!remaining.length) roll.textContent = "Mulai Lagi";
+      else roll.textContent = "Acak Tantangan";
+    });
+  </script>
+</body>
+</html>

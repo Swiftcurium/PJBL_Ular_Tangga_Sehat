@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make it happen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      position: relative;
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #101610;
+      color: #3aff78;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.060) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.060) 1px, transparent 1px);
+      background-size: 48px 48px;
+      content: "";
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse at center, #000 20%, transparent 80%);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 2rem, 640px);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      letter-spacing: -0.05em;
+    }
+
+    p {
+      margin: 1rem 0 2rem;
+      color: #b8b8b8;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    button {
+      padding: 0.8rem 1.25rem;
+      border: 1px solid #555;
+      border-radius: 999px;
+      background: #1e241e;
+      color: #f5f5f5;
+      font: inherit;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      border-color: #888;
+      background: #5b7d71;
+    }
+
+    button:focus-visible {
+      outline: 2px solid #f5f5f5;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 2.5rem 1rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .buttons {
+        width: min(100%, 280px);
+        margin-inline: auto;
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>∴ Ular Tangga Sehat</h1>
+    <p>Pilih tantangan sesuai dengan kategori petak tempat Anda mendarat</p>
+    <div class="buttons">
+      <button type="button" onclick="window.location.href='matematika.html'">Matematika</button>
+      <button type="button" onclick="window.location.href='olahraga.html'">Olahraga</button>
+      <button type="button" onclick="window.location.href='ipa.html'">Ilmu Pengetahuan Alam</button>
+    </div>
+  </main>
+</body>
+</html>

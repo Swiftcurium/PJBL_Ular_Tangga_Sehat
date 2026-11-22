@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ilmu Pengetahuan Alam - Ular Tangga Sehat</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { position: relative; min-height: 100vh; margin: 0; display: grid; place-items: center; background: #101610; color: #3aff78; font-family: Helvetica, Arial, sans-serif; }
+    body::before { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,255,255,.060) 1px, transparent 1px), linear-gradient(90deg,rgba(255,255,255,.060) 1px,transparent 1px); background-size:48px 48px; content:""; pointer-events:none; mask-image:radial-gradient(ellipse at center,#000 20%,transparent 80%); }
+    main { position: relative; z-index: 1; width: min(100% - 2rem, 700px); padding: 3rem 2rem; text-align:left; }
+    h1 { margin:0 0 .5rem; font-size:clamp(2.2rem,7vw,4rem); letter-spacing:-.05em; }
+    .subtitle { color:#b8b8b8; margin:.5rem 0 1.5rem; }
+    .challenge { min-height:170px; display:grid; place-items:center; margin:0 auto 1.25rem; padding:2rem; border:1px solid #4d5a4f; border-radius:20px; background:rgba(30,36,30,.96); color:#f5f5f5; font-size:clamp(1.15rem,4vw,1.55rem); line-height:1.45; box-shadow:0 12px 40px rgba(0,0,0,.18); }
+    .buttons { display:flex; flex-wrap:wrap; justify-content:center; gap:.75rem; }
+    button { padding:.8rem 1.25rem; border:1px solid #555; border-radius:999px; background:#1e241e; color:#f5f5f5; font:inherit; cursor:pointer; transition:.16s ease; }
+    button:hover { transform:translateY(-2px); border-color:#888; background:#5b7d71; }
+    button:focus-visible { outline:2px solid #f5f5f5; outline-offset:3px; }
+    .back { margin-top:.75rem; background:transparent; }
+    .count { color:#9aa59b; font-size:.9rem; margin:.7rem 0 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Ilmu Pengetahuan Alam</h1>
+    <p class="subtitle">Ambil tantangan IPA acak</p>
+    <div class="challenge" id="challenge" aria-live="polite">Siap untuk tantangan?</div>
+    <div class="buttons">
+      <button type="button" id="roll">Acak Tantangan</button>
+      <button type="button" class="back" onclick="window.location.href='index.html'">Kembali ke Menu</button>
+    </div>
+    <p class="count" id="count"></p>
+  </main>
+  <script>
+    const key = "ipaRemaining";
+    const challenges = [
+      // Hitungan gizi
+      "\\text{Camilan: } 10\\,\\text{g karbohidrat},\\ 5\\,\\text{g protein},\\ 2\\,\\text{g lemak} \\Rightarrow E = 10(4) + 5(4) + 2(9) = \\square \\text{ kkal}", // 78
+      "20\\,\\text{g lemak} \\times 9\\,\\text{kkal/g} = \\square \\text{ kkal}", // 180
+      "\\text{IMT} = \\frac{\\text{berat (kg)}}{\\text{tinggi (m)}^2} = \\frac{64}{1{,}6^2} = \\square", // 25
+      "\\text{IMT} = \\frac{\\text{berat (kg)}}{\\text{tinggi (m)}^2} = \\frac{45}{1{,}5^2} = \\square", // 20
+      "\\text{Kebutuhan protein} = 0{,}8\\,\\text{g/kg} \\times 50\\,\\text{kg berat badan} = \\square \\text{ g per hari}", // 40
+      "60\\% \\times 2000\\,\\text{kkal} = 1200\\,\\text{kkal}; \\quad 1200 \\div 4\\,\\text{kkal/g} = \\square \\text{ g karbohidrat}", // 300
+      "8\\ \\text{gelas} \\times 250\\,\\text{mL} = \\square\\,\\text{L air}", // 2
+      "\\text{Label: } 30\\,\\text{g} \\to 6\\,\\text{g gula} \\Rightarrow 100\\,\\text{g} \\to \\square \\text{ g gula}", // 20
+      "\\text{Porsi: } 90\\,\\text{kkal, termasuk } 2\\,\\text{g lemak} \\Rightarrow \\frac{2 \\cdot 9}{90} \\times 100\\% = \\square\\%", // 20
+      "\\text{Susu: } 100\\,\\text{mL} \\to 120\\,\\text{mg kalsium} \\Rightarrow 250\\,\\text{mL} \\to \\square \\text{ mg kalsium}", // 300
+      "3\\ \\text{sendok makan gula} \\times 12\\,\\text{g} \\times 4\\,\\text{kkal/g} = \\square \\text{ kkal}", // 144
+      "\\text{1 butir telur} = 6\\,\\text{g protein} \\Rightarrow 4\\ \\text{butir telur} = \\square \\text{ g protein}", // 24
+      "\\text{Asupan } 2200\\,\\text{kkal} - \\text{pengeluaran } 2000\\,\\text{kkal} = \\square \\text{ kkal (surplus)}", // 200
+      "1\\,\\text{kkal} = \\square\\,\\text{kal}", // 1000
+
+      // Konsep gizi
+      "\\text{Kekurangan vitamin C} \\to \\text{penyakit } \\square", // skorbut
+      "\\text{Kekurangan vitamin D pada anak} \\to \\text{penyakit tulang } \\square", // rakitis
+      "\\text{Kekurangan yodium} \\to \\text{pembesaran kelenjar tiroid } \\square", // gondok
+      "\\text{Kekurangan zat besi} \\to \\text{kurang darah } \\square", // anemia
+      "\\text{Kekurangan vitamin B}_1 \\to \\text{penyakit } \\square", // beri-beri
+      "\\text{Kekurangan vitamin A} \\to \\text{sulit melihat saat gelap } (\\square)", // rabun senja
+      "\\text{Zat gizi makro} = \\text{karbohidrat} + \\text{protein} + \\square", // lemak
+      "\\text{Enzim lipase} \\to \\text{mencerna } \\square", // lemak
+      "\\text{Penyerapan sebagian besar nutrisi} \\to \\text{organ } \\square", // usus halus
+      "\\text{Mineral utama pembentuk tulang dan gigi} = \\square", // kalsium
+      "\\text{Vitamin larut lemak: A, D, E, } \\square", // K
+    ];
+    let remaining = JSON.parse(sessionStorage.getItem(key)) || challenges.map((_, i) => i);
+    const challenge = document.querySelector("#challenge");
+    const roll = document.querySelector("#roll");
+    const count = document.querySelector("#count");
+    function renderChallenge(text, isLatex = false) {
+      challenge.replaceChildren();
+      if (isLatex && window.katex) {
+        katex.render(text, challenge, {
+          throwOnError: false,
+          displayMode: false
+        });
+      } else {
+        challenge.textContent = text;
+      }
+    }
+    function updateCount() {
+      count.textContent = `${remaining.length} tantangan tersisa`;
+      roll.textContent = remaining.length ? "Acak Tantangan" : "Mulai Lagi";
+    }
+    updateCount();
+    roll.addEventListener("click", () => {
+      if (!remaining.length) {
+        remaining = challenges.map((_, i) => i);
+        sessionStorage.setItem(key, JSON.stringify(remaining));
+        renderChallenge("Semua tantangan sudah dimainkan. Satu putaran baru telah dimulai!");
+        updateCount();
+        return;
+      }
+      const position = Math.floor(Math.random() * remaining.length);
+      const index = remaining.splice(position, 1)[0];
+      sessionStorage.setItem(key, JSON.stringify(remaining));
+      renderChallenge(challenges[index], true);
+      updateCount();
+      if (!remaining.length) roll.textContent = "Mulai Lagi";
+      else roll.textContent = "Acak Tantangan";
+    });
+  </script>
+</body>
+</html>
